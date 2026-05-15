@@ -10,13 +10,38 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       texto: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: false
       },
       visible: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
       },
       fecha: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.NOW
+      },
+      userNickName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        references: {
+          model: 'Users',
+          key: 'nickName'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
+      postId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'Posts',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       createdAt: {
         allowNull: false,
@@ -32,3 +57,4 @@ module.exports = {
     await queryInterface.dropTable('Comments');
   }
 };
+     

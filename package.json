@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/main.js",
-    "start" : "node src/index.js",
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Gerardo Gonzalez Tulian",
@@ -15,8 +15,21 @@
     "sequelize-cli": "^6.6.5"
   },
   "dependencies": {
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "joi": "^18.2.1",
     "sequelize": "^6.37.8",
-    "sqlite3": "^6.0.1"
-  }
+    "sqlite3": "^6.0.1",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EP-UnaHur-2026C1/anti-social-relational-tp-aladeriva.git"
+  },
+  "keywords": [],
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/EP-UnaHur-2026C1/anti-social-relational-tp-aladeriva/issues"
+  },
+  "homepage": "https://github.com/EP-UnaHur-2026C1/anti-social-relational-tp-aladeriva#readme"
 }
