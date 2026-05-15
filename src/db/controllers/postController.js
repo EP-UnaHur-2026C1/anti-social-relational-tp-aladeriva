@@ -1,0 +1,128 @@
+import { Post, PostImage, Tag, User } from '../models/index.js';
+
+export const createPost = async (req, res) => {
+  const { descripcion, userNickName, imagenesUrls, tags } = req.body;
+  try {
+    const post = await Post.create({ descripcion, userNickName });
+    if (imagenesUrls && imagenesUrls.length) {
+      await PostImage.bulkCreate(imagenesUrls.map(url => ({ url, postId: post.id })));
+    }
+    if (tags && tags.length) {
+      const tagInstances = await Promise.all(tags.map(async (name) => {
+        const [tag] = await Tag.findOrCreate({ where: { name } });
+        return tag;
+      }));
+      await post.addTags(tagInstances);
+    }
+    res.status(201).json(post);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+export const getPosts = async (req, res) => {
+  const posts = await Post.findAll({ include: [PostImage, Tag, User] });
+  res.json(posts);
+};
+
+
+export const updatePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { descripcion } = req.body;
+    const post = await Post.findByPk(id);
+    if (post) {
+      post.descripcion = descripcion;
+      await post.save();
+      res.json(post);
+    } else {
+      res.status(404).json({ error: 'Post no encontrado' });
+    }
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+export const deletePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const post = await Post.findByPk(id);
+    if (post) {
+      await post.destroy();
+      res.json({ message: 'Post eliminado' });
+    } else {
+      res.status(404).json({ error: 'Post no encontrado' });
+    }
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+export const addImageToPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { url } = req.body;
+    const post = await Post.findByPk(id);
+    if (post) {
+      const image = await PostImage.create({ url, postId: post.id });
+      res.status(201).json(image);
+    } else {
+      res.status(404).json({ error: 'Post no encontrado' });
+    }
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+export const removeImage = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const image = await PostImage.findByPk(id);
+    if (image) {
+      await image.destroy();
+      res.json({ message: 'Imagen eliminada' });
+    } else {
+      res.status(404).json({ error: 'Imagen no encontrada' });
+    }
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+export const addTag = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    const post = await Post.findByPk(id);
+    if (post) {
+      const [tag] = await Tag.findOrCreate({ where: { name } });
+      await post.addTag(tag);
+      res.json(tag);
+    } else {
+      res.status(404).json({ error: 'Post no encontrado' });
+    }
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
+
+export const removeTag = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name } = req.body;
+    const post = await Post.findByPk(id);
+    if (post) {
+      const tag = await Tag.findOne({ where: { name } });
+      if (tag) {
+        await post.removeTag(tag);
+        res.json({ message: 'Tag eliminada' });
+      } else {
+        res.status(404).json({ error: 'Tag no encontrada' });
+      }
+    } else {
+      res.status(404).json({ error: 'Post no encontrado' });
+    }
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
