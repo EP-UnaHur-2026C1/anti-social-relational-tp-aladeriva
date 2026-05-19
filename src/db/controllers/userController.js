@@ -1,7 +1,6 @@
-import { UPDATE } from 'sequelize/lib/query-types';
-import { User } from '../models/index.js';
+const { User } = require("../models/index.js");
 
-export const createUser = async (req, res) => {
+ const createUser = async (req, res) => {
   try {
     const { nickName } = req.body;
     const user = await User.create({ nickName });
@@ -11,13 +10,13 @@ export const createUser = async (req, res) => {
   }
 };
 
-export const getUsers = async (req, res) => {
+  const getUsers = async (req, res) => {
   const users = await User.findAll();
   res.json(users);
 };
 
 
-export const getUsersByNickName = async (req, res) => {
+  const getUsersByNickName = async (req, res) => {
   try {
     const { nickName } = req.params;
     const user = await User.findOne({ where: { nickName } });
@@ -31,7 +30,7 @@ export const getUsersByNickName = async (req, res) => {
   }
 };
 
-export const updateUser = async (req, res) => {
+  const updateUser = async (req, res) => {
   try {
     const { nickName } = req.params;
     const { newNickName } = req.body;
@@ -49,7 +48,7 @@ export const updateUser = async (req, res) => {
 };
 
 
-export const deleteUser = async (req, res) => {
+  const deleteUser = async (req, res) => {
   try {
     const { nickName } = req.params;
     const user = await User.findOne({ where: { nickName } });
@@ -62,4 +61,13 @@ export const deleteUser = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
+};
+
+module.exports = {
+  createUser,
+  getUsers,
+  getUsersByNickName,
+  getUserByNick: getUsersByNickName,
+  updateUser,
+  deleteUser
 };

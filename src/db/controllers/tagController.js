@@ -1,6 +1,6 @@
-import { Tag, Post } from '../models/index.js';
+const { Tag, Post } =require ( "../models/index.js");
 
-export const getAllTags = async (req, res) => {
+  const getAllTags = async (req, res) => {
   try {
     const tags = await Tag.findAll({
       order: [['name', 'ASC']]
@@ -12,19 +12,19 @@ export const getAllTags = async (req, res) => {
 };
 
 
-export const getTagById = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const tag = await Tag.findByPk(id);
-    if (!tag) return res.status(404).json({ error: 'Etiqueta no encontrada' });
-    res.json(tag);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
+  const getTagById = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const tag = await Tag.findByPk(id);
+      if (!tag) return res.status(404).json({ error: 'Etiqueta no encontrada' });
+      res.json(tag);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
 };
 
 
-export const createTag = async (req, res) => {
+  const createTag = async (req, res) => {
   const { name } = req.body;
   if (!name) return res.status(400).json({ error: 'El nombre de la etiqueta es obligatorio' });
   try {
@@ -43,7 +43,7 @@ export const createTag = async (req, res) => {
 
 // Actualizar el nombre de una etiqueta
 
-export const updateTag = async (req, res) => {
+  const updateTag = async (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
   if (!name) return res.status(400).json({ error: 'El nuevo nombre es requerido' });
@@ -59,7 +59,7 @@ export const updateTag = async (req, res) => {
 };
 
 // Eliminar una etiqueta 
-export const deleteTag = async (req, res) => {
+  const deleteTag = async (req, res) => {
   const { id } = req.params;
   try {
     const tag = await Tag.findByPk(id);
@@ -72,7 +72,7 @@ export const deleteTag = async (req, res) => {
 };
 
 // Obtener todos los posts asociados a una etiqueta
-export const getPostsByTag = async (req, res) => {
+  const getPostsByTag = async (req, res) => {
   const { id } = req.params;
     try {
     const tag = await Tag.findByPk(id, { include: Post });
@@ -81,4 +81,12 @@ export const getPostsByTag = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
+};
+module.exports = {
+  getAllTags,
+  getTagById,
+  createTag,
+  updateTag,
+  deleteTag,
+  getPostsByTag
 };

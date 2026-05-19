@@ -1,9 +1,10 @@
-import { Comment, Post, User } from '../models/index.js';
-import dotenv from 'dotenv';
-dotenv.config();
+const { Comment, Post, User } = require ("../models/index.js");
+const { Op } = require("sequelize");
+//import dotenv from 'dotenv';
+//dotenv.config();
 const MONTHS_LIMIT = parseInt(process.env.COMMENT_VISIBILITY_MONTHS) || 6;
 
-export const getCommentsByPost = async (req, res) => {
+  const getCommentsByPost = async (req, res) => {
   const { postId } = req.params;
   const limitDate = new Date();
   limitDate.setMonth(limitDate.getMonth() - MONTHS_LIMIT);
@@ -19,13 +20,13 @@ export const getCommentsByPost = async (req, res) => {
   res.json(comments);
 };
 
-export const createComment = async (req, res) => {
+  const createComment = async (req, res) => {
   const { texto, userNickName, postId } = req.body;
   const comment = await Comment.create({ texto, userNickName, postId, fecha: new Date(), visible: true });
   res.status(201).json(comment);
 };
 
-export const deleteComment = async (req, res) => {
+  const deleteComment = async (req, res) => {
   const { id } = req.params;
   const comment = await Comment.findByPk(id);
   if (comment) {
@@ -36,7 +37,7 @@ export const deleteComment = async (req, res) => {
   }
 };
 
-export const hideComment = async (req, res) => {
+  const hideComment = async (req, res) => {
   const { id } = req.params;
   const comment = await Comment.findByPk(id);
   if (comment) {
@@ -46,4 +47,25 @@ export const hideComment = async (req, res) => {
   } else {
     return res.status(404).json({ error: 'Comentario no encontrado' });
   }
+};
+
+  const updateComment = async (req, res) => {
+  const { id } = req.params;
+  const { texto, visible } = req.body;
+  const comment = await Comment.findByPk(id);
+  if (!comment) {
+    return res.status(404).json({ error: 'Comentario no encontrado' });
+  }
+  if (texto !== undefined) comment.texto = texto;
+  if (visible !== undefined) comment.visible = visible;
+  await comment.save();
+  res.json(comment);
+};
+
+module.exports = {
+  getCommentsByPost,
+  createComment,
+  updateComment,
+  deleteComment,
+  hideComment
 };

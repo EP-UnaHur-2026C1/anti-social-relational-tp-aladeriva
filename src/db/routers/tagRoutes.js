@@ -1,12 +1,12 @@
-import express from 'express';
-import {
+const express = require("express");
+const {
   getAllTags,
   getTagById,
   createTag,
   updateTag,
   deleteTag,
   getPostsByTag
-} from '../controllers/tagControllers.js';
+} = require("../controllers/tagController.js");
 
 const router = express.Router();
 
@@ -17,4 +17,4 @@ router.put('/:id', updateTag);
 router.delete('/:id', deleteTag);
 router.get('/:id/posts', getPostsByTag);
 
-export default router;
+module.exports = router;

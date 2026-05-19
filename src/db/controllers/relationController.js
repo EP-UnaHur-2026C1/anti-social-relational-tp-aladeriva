@@ -1,6 +1,6 @@
-import { Post, PostImage, Tag, PostTag } from '../models/index.js';
+const { Post, PostImage, Tag, PostTag } =require ("../models/index.js");
 
-export const addImageToPost = async (req, res) => {
+  const addImageToPost = async (req, res) => {
   const { postId } = req.params;
   const { url } = req.body; // se espera url en el body: http:.....//
   try {
@@ -14,7 +14,7 @@ export const addImageToPost = async (req, res) => {
   }
 };
 
-export const removeImageFromPost = async (req, res) => {
+  const removeImageFromPost = async (req, res) => {
   const { postId, imageId } = req.params;
 
   try {
@@ -31,7 +31,7 @@ export const removeImageFromPost = async (req, res) => {
 
 // TAGS - ETIQUETAS//
 
-export const addTagToPost = async (req, res) => {
+  const addTagToPost = async (req, res) => {
   const { postId } = req.params;
   const { tagName } = req.body;
   try {
@@ -55,7 +55,7 @@ export const addTagToPost = async (req, res) => {
   }
 };
 
-export const removeTagFromPost = async (req, res) => {
+  const removeTagFromPost = async (req, res) => {
   const { postId, tagId } = req.params;
 
   try {
@@ -71,7 +71,7 @@ export const removeTagFromPost = async (req, res) => {
 
 // Obtener todas las etiquetas de un post
 
-export const getPostTags = async (req, res) => {
+  const getPostTags = async (req, res) => {
   const { postId } = req.params;
   try {
     const post = await Post.findByPk(postId, { include: Tag });
@@ -81,4 +81,11 @@ export const getPostTags = async (req, res) => {
     return res.status(400).json({ error: error.message });
   }
 };
-  
+
+module.exports = {
+  addImageToPost,
+  removeImageFromPost,
+  addTagToPost,
+  removeTagFromPost,
+  getPostTags
+};

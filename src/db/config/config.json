@@ -4,7 +4,7 @@
     "password": null,
     "database": "datastore",
     "host": "data/datastore.db",
-    "dialect": "sqllite"
+    "dialect": "sqlite"
   },
   "test": {
     "username": "root",

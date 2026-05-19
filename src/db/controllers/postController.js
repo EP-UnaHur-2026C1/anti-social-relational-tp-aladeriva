@@ -1,32 +1,32 @@
-import { Post, PostImage, Tag, User } from '../models/index.js';
+const { Post, PostImage, Tag, User } =require ("../models/index.js");
 
-export const createPost = async (req, res) => {
-  const { descripcion, userNickName, imagenesUrls, tags } = req.body;
-  try {
-    const post = await Post.create({ descripcion, userNickName });
-    if (imagenesUrls && imagenesUrls.length) {
-      await PostImage.bulkCreate(imagenesUrls.map(url => ({ url, postId: post.id })));
+  const createPost = async (req, res) => {
+    try {
+      const { descripcion, userNickName, imagenesUrls, tags } = req.body;
+      const post = await Post.create({ descripcion, userNickName });
+      if (imagenesUrls && imagenesUrls.length) {
+        await PostImage.bulkCreate(imagenesUrls.map(url => ({ url, postId: post.id })));
+      }
+      if (tags && tags.length) {
+        const tagInstances = await Promise.all(tags.map(async (name) => {
+          const [tag] = await Tag.findOrCreate({ where: { name } });
+          return tag;
+        }));
+        await post.addTags(tagInstances);
+      }
+      res.status(201).json(post);
+    } catch (error) {
+      return res.status(400).json({ error: error.message });
     }
-    if (tags && tags.length) {
-      const tagInstances = await Promise.all(tags.map(async (name) => {
-        const [tag] = await Tag.findOrCreate({ where: { name } });
-        return tag;
-      }));
-      await post.addTags(tagInstances);
-    }
-    res.status(201).json(post);
-  } catch (error) {
-    return res.status(400).json({ error: error.message });
-  }
 };
 
-export const getPosts = async (req, res) => {
+  const getPosts = async (req, res) => {
   const posts = await Post.findAll({ include: [PostImage, Tag, User] });
   res.json(posts);
 };
 
 
-export const updatePost = async (req, res) => {
+  const updatePost = async (req, res) => {
   try {
     const { id } = req.params;
     const { descripcion } = req.body;
@@ -43,7 +43,7 @@ export const updatePost = async (req, res) => {
   }
 };
 
-export const deletePost = async (req, res) => {
+  const deletePost = async (req, res) => {
   try {
     const { id } = req.params;
     const post = await Post.findByPk(id);
@@ -58,7 +58,7 @@ export const deletePost = async (req, res) => {
   }
 };
 
-export const addImageToPost = async (req, res) => {
+  const addImageToPost = async (req, res) => {
   try {
     const { id } = req.params;
     const { url } = req.body;
@@ -74,7 +74,7 @@ export const addImageToPost = async (req, res) => {
   }
 };
 
-export const removeImage = async (req, res) => {
+  const removeImage = async (req, res) => {
   try {
     const { id } = req.params;
     const image = await PostImage.findByPk(id);
@@ -89,7 +89,7 @@ export const removeImage = async (req, res) => {
   }
 };
 
-export const addTag = async (req, res) => {
+  const addTag = async (req, res) => {
   try {
     const { id } = req.params;
     const { name } = req.body;
@@ -106,7 +106,7 @@ export const addTag = async (req, res) => {
   }
 };
 
-export const removeTag = async (req, res) => {
+  const removeTag = async (req, res) => {
   try {
     const { id } = req.params;
     const { name } = req.body;
@@ -125,4 +125,13 @@ export const removeTag = async (req, res) => {
   } catch (error) {
     return res.status(400).json({ error: error.message });
   }
+};
+
+module.exports = {
+  createPost,
+  getPosts,
+  updatePost,
+  deletePost,
+  addImage: addImageToPost,
+  removeImage
 };

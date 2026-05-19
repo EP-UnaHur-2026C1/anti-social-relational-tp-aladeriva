@@ -1,11 +1,11 @@
-import express from 'express';
-import {
+const express = require("express");
+const {
   addImageToPost,
   removeImageFromPost,
   addTagToPost,
   removeTagFromPost,
   getPostTags
-} from '../controllers/relationControllers.js';
+} = require("../controllers/relationController.js");
 
 const router = express.Router();
 
@@ -18,4 +18,4 @@ router.post('/posts/:postId/tags', addTagToPost);
 router.delete('/posts/:postId/tags/:tagId', removeTagFromPost);
 router.get('/posts/:postId/tags', getPostTags);
 
-export default router;
+module.exports = router;
