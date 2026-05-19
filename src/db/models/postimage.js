@@ -9,8 +9,9 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   PostImage.init({
-    url: DataTypes.STRING,allowNull: false
-  }, {
+    
+    url: {type: DataTypes.STRING, allowNull: false},
+  
     postId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -18,9 +19,11 @@ module.exports = (sequelize, DataTypes) => {
         model: 'Posts',
         key: 'id'
       }
-    },
+    }
+    }, {
     sequelize,
     modelName: 'PostImage',
+    timestamps: false,
   });
 
   return PostImage;

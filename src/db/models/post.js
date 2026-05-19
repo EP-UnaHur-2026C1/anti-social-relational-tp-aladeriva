@@ -18,17 +18,20 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Post.init({
-    userNickName: {type: DataTypes.STRING, allowNull: false},
-    descripcion: DataTypes.STRING,allowNull: false,
-    fecha: DataTypes.DATE,allowNull: false,
-    PostId: {
-      type: DataTypes.INTEGER,
+    userNickName: {
+      type: DataTypes.STRING, 
       allowNull: false,
-      references: { model: 'Tags', key: 'id' }
-    }
+      references: {
+        model: 'Users',
+        key: 'nickName'
+      }
+    },
+    descripcion: {type: DataTypes.STRING, allowNull: false},
+    fecha: {type: DataTypes.DATE, allowNull: false}
   }, {
     sequelize,
     modelName: 'Post',
+    timestamps: false,
   });
   
   return Post;
