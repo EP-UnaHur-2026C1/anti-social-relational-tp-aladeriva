@@ -1,0 +1,353 @@
+openapi: 3.0.0
+info:
+  title: "UnaHur Anti-Social Net API"
+  description: "API para la red social 'UnaHur Anti-Social Net'. Permite gestionar usuarios, publicaciones, comentarios y etiquetas."
+  version: "1.0.0"
+  contact:
+    name: "Soporte del equipo de desarrollo"
+servers:
+  - url: "http://localhost:3000/api"
+    description: "Servidor de desarrollo local"
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        nickName:
+          type: string
+          description: "Nombre de usuario único (funciona como ID y clave primaria)."
+          example: "juan.perez"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "ID autogenerado y único para la publicación."
+          example: 1
+        descripcion:
+          type: string
+          description: "Contenido de la publicación."
+          example: "Este es mi primer post en la red."
+        fecha:
+          type: string
+          format: date-time
+        userNickName:
+          type: string
+          description: "Nickname del usuario que creó el post."
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    PostWithRelations:
+      allOf:
+        - $ref: '#/components/schemas/Post'
+        - type: object
+          properties:
+            User:
+              $ref: '#/components/schemas/User'
+            PostImages:
+              type: array
+              items:
+                $ref: '#/components/schemas/PostImage'
+            Tags:
+              type: array
+              items:
+                $ref: '#/components/schemas/Tag'
+
+    PostImage:
+      type: object
+      properties:
+        id:
+          type: integer
+        url:
+          type: string
+          description: "URL pública de la imagen."
+          example: "https://miservidor.com/imagenes/123.jpg"
+        postId:
+          type: integer
+
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        texto:
+          type: string
+        visible:
+          type: boolean
+          description: "Indica si el comentario es visible o no según su antigüedad."
+        fecha:
+          type: string
+          format: date-time
+        userNickName:
+          type: string
+        postId:
+          type: integer
+
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          description: "Nombre de la etiqueta."
+          example: "tecnologia"
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+
+
+paths:
+  /users:
+    get:
+      summary: "Obtiene la lista de todos los usuarios."
+      description: "Devuelve un array con los objetos de todos los usuarios registrados."
+      responses:
+        '200':
+          description: "Operación exitosa. Devuelve un array de usuarios."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: "Crea un nuevo usuario."
+      description: "Registra a un nuevo usuario en el sistema usando su nickName."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - nickName
+              properties:
+                nickName:
+                  type: string
+                  description: "Nombre de usuario único que identificará al usuario en todo el sistema."
+                  example: "maria_garcia"
+      responses:
+        '201':
+          description: "Usuario creado exitosamente."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: "Solicitud incorrecta. El nickName ya existe o no fue proporcionado."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /posts:
+    get:
+      summary: "Obtiene la lista de todas las publicaciones con todos sus detalles."
+      description: "Devuelve un array de publicaciones, incluyendo los datos del autor, las imágenes y las etiquetas asociadas."
+      responses:
+        '200':
+          description: "Operación exitosa."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PostWithRelations'
+    post:
+      summary: "Crea una nueva publicación."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - descripcion
+                - userNickName
+              properties:
+                descripcion:
+                  type: string
+                  description: "Contenido del post."
+                  example: "Aprendiendo sobre APIs REST"
+                userNickName:
+                  type: string
+                  description: "El nickName del usuario que publica."
+                  example: "juan.perez"
+                imagenesUrls:
+                  type: array
+                  description: "Opcional. Lista de URLs de imágenes para asociar al post."
+                  items:
+                    type: string
+                  example: ["http://.../img1.jpg", "http://.../img2.png"]
+                tags:
+                  type: array
+                  description: "Opcional. Lista de nombres de etiquetas para asociar al post."
+                  items:
+                    type: string
+                  example: ["javascript", "backend"]
+      responses:
+        '201':
+          description: "Publicación creada exitosamente."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          description: "Error en la solicitud (por ejemplo, el nickName del usuario no existe)."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /comments/post/{postId}:
+    get:
+      summary: "Obtiene los comentarios visibles de una publicación."
+      description: |
+        Devuelve los comentarios de una publicación específica que cumplen dos condiciones:
+          1. Su fecha no es mayor a los meses configurados (por defecto 6 meses).
+          2. Su atributo 'visible' es true.
+        Esta es la lógica de negocio central del MVP.
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: integer
+          description: "ID de la publicación de la que se quieren obtener los comentarios."
+          example: 1
+      responses:
+        '200':
+          description: "Operación exitosa. Devuelve un array de comentarios visibles."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Comment'
+        '404':
+          description: "No se encontró ninguna publicación con el ID proporcionado."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /comments:
+    post:
+      summary: "Crea un nuevo comentario."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - texto
+                - userNickName
+                - postId
+              properties:
+                texto:
+                  type: string
+                  description: "El contenido del comentario."
+                  example: "Excelente explicación, muy clara."
+                userNickName:
+                  type: string
+                  description: "NickName del usuario que comenta."
+                  example: "usuario_anuncio"
+                postId:
+                  type: integer
+                  description: "ID de la publicación a la que se comenta."
+                  example: 1
+      responses:
+        '201':
+          description: "Comentario creado exitosamente."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: "Error en la solicitud (datos faltantes, usuario o post no existen)."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /relations/posts/{postId}/images:
+    post:
+      summary: "Agrega una imagen a una publicación."
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: integer
+          description: "ID de la publicación a la que se asociará la imagen."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - url
+              properties:
+                url:
+                  type: string
+                  description: "URL pública de la nueva imagen."
+                  example: "http://.../nueva-imagen.jpg"
+      responses:
+        '201':
+          description: "Imagen asociada exitosamente."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostImage'
+  /relations/posts/{postId}/tags:
+    post:
+      summary: "Asocia una etiqueta existente o nueva a una publicación."
+      parameters:
+        - in: path
+          name: postId
+          required: true
+          schema:
+            type: integer
+          description: "ID de la publicación a la que se asociará la etiqueta."
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tagName
+              properties:
+                tagName:
+                  type: string
+                  description: "El nombre de la etiqueta."
+                  example: "tutorial"
+      responses:
+        '201':
+          description: "Etiqueta asociada exitosamente."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  tag:
+                    $ref: '#/components/schemas/Tag'

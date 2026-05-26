@@ -43,7 +43,7 @@ const { Post, PostImage, Tag, PostTag } =require ("../models/index.js");
       tag = await Tag.create({ name: tagName });
     }
 
-    // Verifica si la relaciòn ya existe
+    // Verifica si la relación ya existe
     const existing = await PostTag.findOne({ where: { postId, tagId: tag.id } });
     if (existing) return res.status(400).json({ error: 'La etiqueta ya está asociada al post' });
 

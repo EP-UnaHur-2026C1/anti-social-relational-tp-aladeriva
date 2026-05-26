@@ -19,7 +19,4 @@ const validaExisteMiddleware = (Modelo) => {
 }
 
 
-
-
-
 module.exports = { validaPathParameterMiddleware, validaExisteMiddleware }

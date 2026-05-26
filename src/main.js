@@ -16,7 +16,31 @@ app.use("/relation",relationRouter);
 app.use("/tag",tagRouter);
 app.use("/user",userRouter);
 
-app.listen(PORT,async() => {
-    await db.sequelize.sync();
-    console.log("servidor esta escuchando")
-})
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const swaggerDocument = YAML.load(path.join(__dirname, 'swagger.yaml'));
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+async function connectToDataBase() {
+  try {
+    await db.sequelize.authenticate();
+  } catch (error) {
+    console.error('Error al conectar a la base de datos:', error);
+  }
+}
+
+
+async function startServer() {
+  await connectToDataBase(); 
+  app.listen(PORT, () => { 
+    console.log(`✅ App iniciada y corriendo en el puerto ${PORT}`);
+  });
+}
+
+startServer();

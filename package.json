@@ -4,7 +4,7 @@
   "description": "UnaHur anti-social net - Trabajo Práctico",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/main.js",
+    "dev": "nodemon src/main.jsn",
     "start": "node src/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,7 +20,8 @@
     "joi": "^18.2.1",
     "sequelize": "^6.37.8",
     "sqlite3": "^6.0.1",
-    "swagger-ui-express": "^5.0.1"
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
   },
   "repository": {
     "type": "git",
