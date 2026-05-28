@@ -12,7 +12,7 @@ const MONTHS_LIMIT = parseInt(process.env.COMMENT_VISIBILITY_MONTHS) || 6;
     where: {
       postId,
       fecha: { [Op.gte]: limitDate },
-      visible: false
+      visible: true
     },
     include: [User],
     order: [['fecha', 'ASC']]

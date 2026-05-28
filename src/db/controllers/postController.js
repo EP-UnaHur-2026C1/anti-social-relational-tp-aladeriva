@@ -3,7 +3,7 @@ const { Post, PostImage, Tag, User } =require ("../models/index.js");
   const createPost = async (req, res) => {
     try {
       const { descripcion, userNickName, imagenesUrls, tags } = req.body;
-      const post = await Post.create({ descripcion, userNickName });
+      const post = await Post.create({ descripcion, userNickName, fecha: new Date() });
       if (imagenesUrls && imagenesUrls.length) {
         await PostImage.bulkCreate(imagenesUrls.map(url => ({ url, postId: post.id })));
       }
