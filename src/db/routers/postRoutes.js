@@ -5,7 +5,7 @@ const {
   getPosts,
   updatePost,
   deletePost,
-  addImage,
+  addImageToPost,
   removeImage
 } = require("../controllers/postController.js");
 
@@ -24,7 +24,20 @@ router.post(
   createPost
 );
 
+router.put(
+  '/:id',
+  middleware.validaPathParameterMiddleware,
+  middleware.validaExisteMiddleware(Post),
+  schemaValidator(postSchema),
+  updatePost
+);
 
+router.delete(
+  "/:id",
+  middleware.validaPathParameterMiddleware,
+  middleware.validaExisteMiddleware(Post),
+  deletePost
+)
 // ✔ OBTENER POSTS
 router.get("/", getPosts);
 
@@ -39,12 +52,12 @@ router.put(
 
 
 // ✔ AGREGAR IMAGEN A POST
-router.post(
+router.put(
   "/:id/images",
   middleware.validaPathParameterMiddleware,
   middleware.validaExisteMiddleware(Post),
   schemaValidator(postImageSchema),
-  addImage
+  addImageToPost
 );
 
 

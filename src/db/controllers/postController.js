@@ -2,21 +2,31 @@ const { Post, PostImage, Tag, User } =require ("../models/index.js");
 
   const createPost = async (req, res) => {
     try {
+      
       const { descripcion, userNickName, imagenesUrls, tags } = req.body;
+      
       const post = await Post.create({ descripcion, userNickName, fecha: new Date() });
       if (imagenesUrls && imagenesUrls.length) {
         await PostImage.bulkCreate(imagenesUrls.map(url => ({ url, postId: post.id })));
       }
       if (tags && tags.length) {
-        const tagInstances = await Promise.all(tags.map(async (name) => {
-          const [tag] = await Tag.findOrCreate({ where: { name } });
+        const tagInstances = await Promise.all(tags.map(async (nombre) => {
+          const [tag] = await Tag.findOrCreate({ where: { nombre } });
           return tag;
         }));
         await post.addTags(tagInstances);
       }
       res.status(201).json(post);
     } catch (error) {
-      return res.status(400).json({ error: error.message });
+      console.log("ERROR:");
+      console.log(error);
+
+      console.log("ERROR ORIGINAL:");
+      console.log(error.original);
+
+      console.log("PARENT:");
+      console.log(error.parent);
+      return res.status(400).json({ error: error.message, details: error.errors});
     }
 };
 
@@ -58,19 +68,32 @@ const { Post, PostImage, Tag, User } =require ("../models/index.js");
   }
 };
 
-  const addImageToPost = async (req, res) => {
+ const addImageToPost = async (req, res) => {
   try {
     const { id } = req.params;
-    const { url } = req.body;
+    const { imagenesUrls } = req.body;
+
     const post = await Post.findByPk(id);
     if (post) {
-      const image = await PostImage.create({ url, postId: post.id });
-      res.status(201).json(image);
+      const images = await PostImage.bulkCreate(
+        imagenesUrls.map(url => ({
+          url,
+          postId: post.id
+        }))
+      );
+      res.status(201).json(images);
+
     } else {
-      res.status(404).json({ error: 'Post no encontrado' });
+      res.status(404).json({
+        error: 'Post no encontrado'
+      });
     }
+    
   } catch (error) {
-    return res.status(400).json({ error: error.message });
+    return res.status(400).json({
+      error: error.message
+    });
+
   }
 };
 
@@ -132,6 +155,6 @@ module.exports = {
   getPosts,
   updatePost,
   deletePost,
-  addImage: addImageToPost,
+  addImageToPost,
   removeImage
 };
