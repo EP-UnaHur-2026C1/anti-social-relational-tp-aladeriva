@@ -1,3 +1,5 @@
+import { uploadImageToPost, uploadMiddleware } from '../controllers/postController.js';
+
 const express = require("express");
 const { Post, Postimage } = require("../models");
 const {
@@ -22,6 +24,12 @@ router.post(
   "/",
   schemaValidator(postSchema),
   createPost
+);
+
+// Ruta para subir imagen
+router.post(
+  '/:postId/images/upload', 
+  uploadMiddleware, uploadImageToPost
 );
 
 router.put(

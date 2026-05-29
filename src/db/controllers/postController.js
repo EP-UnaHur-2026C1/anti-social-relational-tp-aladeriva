@@ -1,4 +1,19 @@
-const { Post, PostImage, Tag, User } =require ("../models/index.js");
+import upload from '../middlewares/upload.middleware.js';
+import { PostImage } from '../models/index.js';
+
+export const uploadImageToPost = async (req, res) => {
+  const { postId } = req.params;
+  if (!req.file) {
+    return res.status(400).json({ error: 'No se recibió ninguna imagen' });
+  }
+  try {
+    const imageUrl = `/uploads/${req.file.filename}`; 
+    const newImage = await PostImage.create({ url: imageUrl, postId });
+    res.status(201).json(newImage);
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+};
 
   const createPost = async (req, res) => {
     try {
@@ -158,3 +173,5 @@ module.exports = {
   addImageToPost,
   removeImage
 };
+
+export const uploadMiddleware = upload.single('image');
