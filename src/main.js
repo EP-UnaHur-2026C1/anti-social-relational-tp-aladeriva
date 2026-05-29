@@ -3,6 +3,7 @@ const app = express();
 const db = require("./db/models");
 const path = require("path");
 const { fileURLToPath } = require('url');
+const followRoutes = require('./routes/followRoutes.js');
 
 const commentRouter = require("./db/routers/commentRoutes.js");
 const postRouter = require("./db/routers/postRoutes");
@@ -26,6 +27,7 @@ app.use("/relation", relationRouter);
 app.use("/tag", tagRouter);
 app.use("/user", userRouter);
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+app.use('/api', followRoutes);
 
 const swaggerDocument = YAML.load(
   path.join(__dirname, 'swagger.yaml')
