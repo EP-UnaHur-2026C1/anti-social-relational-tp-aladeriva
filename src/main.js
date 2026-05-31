@@ -23,7 +23,6 @@ const YAML = require('yamljs');
 
 
 
-
 const swaggerDocument = YAML.load(path.join(process.cwd(), 'swagger.yaml'));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -38,8 +37,11 @@ async function connectToDataBase() {
 
 
 async function startServer() {
-  await connectToDataBase(); 
-  app.listen(PORT, () => { 
+  await connectToDataBase();
+
+  await db.sequelize.sync({ alter: true });
+
+  app.listen(PORT, () => {
     console.log(`✅ App iniciada y corriendo en el puerto ${PORT}`);
   });
 }

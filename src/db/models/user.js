@@ -7,6 +7,20 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
        User.hasMany(models.Post, { foreignKey: 'userNickName', sourceKey: 'nickName' });
        User.hasMany(models.Comment, { foreignKey: 'userNickName', sourceKey: 'nickName' });
+
+       User.belongsToMany(models.User, {
+          as: 'Following',
+          through: 'UserFollowers',
+          foreignKey: 'followerNickName',
+          otherKey: 'followedNickName'
+        });
+
+        User.belongsToMany(models.User, {
+          as: 'Followers',
+          through: 'UserFollowers',
+          foreignKey: 'followedNickName',
+          otherKey: 'followerNickName'
+        });
     }
   }
   User.init({
