@@ -1,7 +1,6 @@
 const { Comment, Post, User } = require ("../models/index.js");
 const { Op } = require("sequelize");
-//import dotenv from 'dotenv';
-//dotenv.config();
+
 const MONTHS_LIMIT = parseInt(process.env.COMMENT_VISIBILITY_MONTHS) || 6;
 
   const getCommentsByPost = async (req, res) => {

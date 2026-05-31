@@ -7,16 +7,15 @@ const validaPathParameterMiddleware = (req, res, next) => {
 }
 
 const validaExisteMiddleware = (Modelo) => {
-
     return async (req, res, next) => {
-        const id = req.params.id
-        const autor = await Modelo.findByPk(id)
-        if (!autor) {
-            return res.status(404).json( {message: `El id ${id} en modelo ${Modelo.name} no Existe`} )
+        const id = req.params.id;
+        const registro = await Modelo.findByPk(id); 
+        if (!registro) {
+            return res.status(404).json({ message: `El id ${id} en modelo ${Modelo.name} no existe` });
         }
-        next()
-    }
-}
+        next();
+    };
+};
 
 
 module.exports = { validaPathParameterMiddleware, validaExisteMiddleware }

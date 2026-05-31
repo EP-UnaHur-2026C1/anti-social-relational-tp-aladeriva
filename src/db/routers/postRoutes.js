@@ -1,3 +1,5 @@
+const { uploadImageToPost, uploadMiddleware } = require("../controllers/postController.js") ;
+
 const express = require("express");
 const { Post, Postimage } = require("../models");
 const {
@@ -5,7 +7,7 @@ const {
   getPosts,
   updatePost,
   deletePost,
-  addImage,
+  addImageToPost,
   removeImage
 } = require("../controllers/postController.js");
 
@@ -24,7 +26,26 @@ router.post(
   createPost
 );
 
+// Ruta para subir imagen
+router.post(
+  '/:postId/images/upload', 
+  uploadMiddleware, uploadImageToPost
+);
 
+router.put(
+  '/:id',
+  middleware.validaPathParameterMiddleware,
+  middleware.validaExisteMiddleware(Post),
+  schemaValidator(postSchema),
+  updatePost
+);
+
+router.delete(
+  "/:id",
+  middleware.validaPathParameterMiddleware,
+  middleware.validaExisteMiddleware(Post),
+  deletePost
+)
 // ✔ OBTENER POSTS
 router.get("/", getPosts);
 
@@ -39,12 +60,12 @@ router.put(
 
 
 // ✔ AGREGAR IMAGEN A POST
-router.post(
+router.put(
   "/:id/images",
   middleware.validaPathParameterMiddleware,
   middleware.validaExisteMiddleware(Post),
   schemaValidator(postImageSchema),
-  addImage
+  addImageToPost
 );
 
 
