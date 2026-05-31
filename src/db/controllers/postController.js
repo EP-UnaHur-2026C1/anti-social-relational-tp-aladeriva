@@ -1,7 +1,8 @@
-import upload from '../middlewares/upload.middleware.js';
-import { PostImage } from '../models/index.js';
+const upload = require("../middlewares/upload.middleware.js");
+const { Post, PostImage, Tag, User } = require("../models/index.js");
+const uploadMiddleware = upload.single('image');
 
-export const uploadImageToPost = async (req, res) => {
+  const uploadImageToPost = async (req, res) => {
   const { postId } = req.params;
   if (!req.file) {
     return res.status(400).json({ error: 'No se recibió ninguna imagen' });
@@ -133,7 +134,7 @@ export const uploadImageToPost = async (req, res) => {
     const { name } = req.body;
     const post = await Post.findByPk(id);
     if (post) {
-      const [tag] = await Tag.findOrCreate({ where: { name } });
+      const [tag] = await Tag.findOrCreate({ where: { nombre: name }, defaults: { nombre: name } });
       await post.addTag(tag);
       res.json(tag);
     } else {
@@ -150,7 +151,7 @@ export const uploadImageToPost = async (req, res) => {
     const { name } = req.body;
     const post = await Post.findByPk(id);
     if (post) {
-      const tag = await Tag.findOne({ where: { name } });
+      const tag = await Tag.findOne({ where: { nombre: name } });
       if (tag) {
         await post.removeTag(tag);
         res.json({ message: 'Tag eliminada' });
@@ -171,7 +172,8 @@ module.exports = {
   updatePost,
   deletePost,
   addImageToPost,
-  removeImage
+  removeImage,
+  uploadImageToPost,
+  uploadMiddleware
 };
 
-export const uploadMiddleware = upload.single('image');

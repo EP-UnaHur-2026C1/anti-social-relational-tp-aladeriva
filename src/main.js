@@ -1,9 +1,9 @@
+require('dotenv').config();
 const express = require("express");
 const app = express();
 const db = require("./db/models");
 const path = require("path");
-const { fileURLToPath } = require('url');
-const followRoutes = require('./routes/followRoutes.js');
+const followRoutes = require('./db/routers/followRoutes.js');
 
 const commentRouter = require("./db/routers/commentRoutes.js");
 const postRouter = require("./db/routers/postRoutes");
@@ -11,8 +11,7 @@ const relationRouter = require("./db/routers/relationRoutes");
 const tagRouter = require("./db/routers/tagRoutes");
 const userRouter = require("./db/routers/userRoutes");
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
 
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
@@ -30,7 +29,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use('/api', followRoutes);
 
 const swaggerDocument = YAML.load(
-  path.join(__dirname, 'swagger.yaml')
+  path.join(__dirname, '../swagger.yaml')
 );
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

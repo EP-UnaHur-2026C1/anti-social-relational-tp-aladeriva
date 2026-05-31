@@ -1,6 +1,6 @@
-import db from '../models/index.js';
+const db = require("../models/index.js");
 
-export const followUser = async (req, res) => {
+  const followUser = async (req, res) => {
   const followerId = req.user.id;       // viene del middleware auth
   const { followingId } = req.params;   // ID del usuario a seguir
   if (followerId == followingId) return res.status(400).json({ error: 'No puedes seguirte a ti mismo' });
@@ -12,7 +12,7 @@ export const followUser = async (req, res) => {
   }
 };
 
-export const unfollowUser = async (req, res) => {
+  const unfollowUser = async (req, res) => {
   const followerId = req.user.id;
   const { followingId } = req.params;
   try {
@@ -24,7 +24,7 @@ export const unfollowUser = async (req, res) => {
   }
 };
 
-export const getFollowers = async (req, res) => {
+  const getFollowers = async (req, res) => {
   const { userId } = req.params;
   try {
     const user = await db.User.findByPk(userId, {
@@ -36,7 +36,7 @@ export const getFollowers = async (req, res) => {
   }
 };
 
-export const getFollowing = async (req, res) => {
+  const getFollowing = async (req, res) => {
   const { userId } = req.params;
   try {
     const user = await db.User.findByPk(userId, {
@@ -46,4 +46,10 @@ export const getFollowing = async (req, res) => {
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
+};
+module.exports = {
+ getFollowing,
+ getFollowers,
+ unfollowUser,
+ followUser
 };

@@ -1,4 +1,4 @@
-import { uploadImageToPost, uploadMiddleware } from '../controllers/postController.js';
+const { uploadImageToPost, uploadMiddleware } = require("../controllers/postController.js") ;
 
 const express = require("express");
 const { Post, Postimage } = require("../models");
