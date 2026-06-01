@@ -30,14 +30,13 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 async function startServer() {
   try {
     await db.sequelize.authenticate();
-
-    await db.sequelize.sync({ alter: true });
+    await db.sequelize.sync();
 
     app.listen(PORT, () => {
       console.log(`✅ App iniciada y corriendo en el puerto ${PORT}`);
     });
   } catch (error) {
-    console.error("❌ Error:", error);
+    console.error('❌ Error:', error);
   }
 }
 
