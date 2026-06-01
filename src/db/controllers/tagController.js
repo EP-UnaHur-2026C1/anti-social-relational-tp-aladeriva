@@ -3,7 +3,7 @@ const { Tag, Post } =require ( "../models/index.js");
   const getAllTags = async (req, res) => {
   try {
     const tags = await Tag.findAll({
-      order: [['nombre', 'ASC']]
+      order: [['name', 'ASC']]
     });
     res.json(tags);
   } catch (error) {
@@ -29,8 +29,8 @@ const { Tag, Post } =require ( "../models/index.js");
   if (!name) return res.status(400).json({ error: 'El nombre de la etiqueta es obligatorio' });
   try {
     const [tag, created] = await Tag.findOrCreate({
-      where: { nombre: name },
-      defaults: { nombre: name }
+      where: { name: name },
+      defaults: { name: name }
     });
     if (!created) {
       return res.status(409).json({ error: 'La etiqueta ya existe', tag });
@@ -50,7 +50,7 @@ const { Tag, Post } =require ( "../models/index.js");
   try {
     const tag = await Tag.findByPk(id);
     if (!tag) return res.status(404).json({ error: 'Etiqueta no encontrada' });
-    tag.nombre = name;
+    tag.name = name;
     await tag.save();
     res.json(tag);
   } catch (error) {

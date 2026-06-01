@@ -27,7 +27,7 @@ const uploadMiddleware = upload.single('image');
       }
       if (tags && tags.length) {
         const tagInstances = await Promise.all(tags.map(async (nombre) => {
-          const [tag] = await Tag.findOrCreate({ where: { nombre } });
+          const [tag] = await Tag.findOrCreate({ where: { name: nombre }, defaults: { name: nombre } });
           return tag;
         }));
         await post.addTags(tagInstances);
@@ -134,7 +134,7 @@ const uploadMiddleware = upload.single('image');
     const { name } = req.body;
     const post = await Post.findByPk(id);
     if (post) {
-      const [tag] = await Tag.findOrCreate({ where: { nombre: name }, defaults: { nombre: name } });
+      const [tag] = await Tag.findOrCreate({ where: { name: name }, defaults: { name: name } });
       await post.addTag(tag);
       res.json(tag);
     } else {
@@ -151,7 +151,7 @@ const uploadMiddleware = upload.single('image');
     const { name } = req.body;
     const post = await Post.findByPk(id);
     if (post) {
-      const tag = await Tag.findOne({ where: { nombre: name } });
+      const tag = await Tag.findOne({ where: { name: name } });
       if (tag) {
         await post.removeTag(tag);
         res.json({ message: 'Tag eliminada' });

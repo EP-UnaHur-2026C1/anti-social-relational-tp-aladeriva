@@ -38,7 +38,7 @@ const { Post, PostImage, Tag, PostTag } =require ("../models/index.js");
     const post = await Post.findByPk(postId);
     if (!post) return res.status(404).json({ error: 'Post no encontrado' });
 
-    let tag = await Tag.findOne({ where: { nombre: tagName } });
+    let tag = await Tag.findOne({ where: { name: tagName } });
     if (!tag) {
       tag = await Tag.create({ name: tagName });
     }

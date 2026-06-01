@@ -20,10 +20,14 @@ module.exports = (sequelize, DataTypes) => {
   }
 
   UserFollower.init({
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true
+    },
     followerNickName: {
       type: DataTypes.STRING,
       allowNull: false,
-      primaryKey: true,
       references: {
         model: 'Users',
         key: 'nickName'
@@ -32,7 +36,6 @@ module.exports = (sequelize, DataTypes) => {
     followedNickName: {
       type: DataTypes.STRING,
       allowNull: false,
-      primaryKey: true,
       references: {
         model: 'Users',
         key: 'nickName'
@@ -43,6 +46,12 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'UserFollower',
     tableName: 'UserFollowers',
     timestamps: false,
+    indexes: [
+      {
+        unique: true,
+        fields: ['followerNickName', 'followedNickName']
+      }
+    ]
   });
 
   return UserFollower;

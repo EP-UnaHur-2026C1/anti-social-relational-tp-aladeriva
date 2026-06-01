@@ -1,7 +1,7 @@
 const express = require("express");
 const schemaValidator = require("../middlewares/schemaValidator.js");
 const userSchema = require("../schema/userSchema.js");
-const {followUser, unfollowUser} = require("../controllers/followController.js");
+const {followUser, unfollowUser,getFollowers} = require("../controllers/followController.js");
 const {validaFollowMiddleware, validaUnfollowMiddleware} = require("../middlewares/follow.middleware.js");
 const followSchema = require("../schema/followSchema.js");
 
@@ -24,7 +24,7 @@ router.delete('/:nickName', deleteUser);
 
 router.post('/follow', schemaValidator(followSchema), validaFollowMiddleware, followUser);
 router.post('/unfollow', schemaValidator(followSchema), validaUnfollowMiddleware, unfollowUser);
-
+router.get('/followers/:nickName', getFollowers);
 module.exports = router;
 
 

@@ -1,3 +1,5 @@
+const { User } = require("../models/index.js");
+
 const followUser = async (req, res) => {
   try {
     const { followerNickName, followedNickName } = req.body;
@@ -26,7 +28,24 @@ const unfollowUser = async (req, res) => {
   }
 };
 
+const getFollowers = async(req,res)=>{
+  try{
+    const { nickName } = req.params;
+    const user = await User.findOne({ where: { nickName } });
+
+    if (!user) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+    const followers = await user.getFollowers({ attributes: ['nickName'] });
+    
+    return res.json({ count: followers.length, followers });
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+}
+
 module.exports = {
   followUser,
-  unfollowUser
+  unfollowUser,
+  getFollowers
 };
