@@ -1,0 +1,66 @@
+{
+  "usuarios": {
+    "crear_usuario": {
+      "descripcion": "Crear un nuevo usuario",
+      "metodo": "POST",
+      "url": "http://localhost:5000/user",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "nickName": "juan123"
+      },
+      "respuesta_exitosa": {
+        "nickName": "juan123"
+      },
+      "codigo_http": 201
+    },
+    "obtener_todos_usuarios": {
+      "descripcion": "Obtener lista de todos los usuarios",
+      "metodo": "GET",
+      "url": "http://localhost:5000/user",
+      "respuesta_exitosa": [
+        {
+          "nickName": "juan123"
+        },
+        {
+          "nickName": "maria456"
+        }
+      ],
+      "codigo_http": 200
+    },
+    "obtener_usuario_por_nickname": {
+      "descripcion": "Obtener un usuario específico por nickName",
+      "metodo": "GET",
+      "url": "http://localhost:5000/user/juan123",
+      "respuesta_exitosa": {
+        "nickName": "juan123"
+      },
+      "codigo_http": 200
+    },
+    "actualizar_usuario": {
+      "descripcion": "Actualizar el nickName de un usuario",
+      "metodo": "PUT",
+      "url": "http://localhost:5000/user/juan123",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "newNickName": "juan125"
+      },
+      "respuesta_exitosa": {
+        "nickName": "juan125"
+      },
+      "codigo_http": 200
+    },
+    "eliminar_usuario": {
+      "descripcion": "Eliminar un usuario",
+      "metodo": "DELETE",
+      "url": "http://localhost:5000/user/juan123",
+      "respuesta_exitosa": {
+        "message": "Usuario eliminado"
+      },
+      "codigo_http": 200
+    }
+  }
+}

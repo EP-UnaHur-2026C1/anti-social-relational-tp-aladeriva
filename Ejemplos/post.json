@@ -1,0 +1,101 @@
+{
+  "posts": {
+    "crear_post": {
+      "descripcion": "Crear un nuevo post con descripción, usuario, tags e imágenes",
+      "metodo": "POST",
+      "url": "http://localhost:5000/post",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "descripcion": "Este es mi primer post",
+        "userNickName": "juan123",
+        "tags": ["viaje", "foto"],
+        "imagenesUrls": ["https://placekitten.com/800/600", "https://picsum.photos/800/600"]
+      },
+      "respuesta_exitosa": {
+        "id": 1,
+        "descripcion": "Este es mi primer post",
+        "userNickName": "juan123",
+        "fecha": "2026-05-31T23:45:00.000Z"
+      },
+      "codigo_http": 201
+    },
+    "obtener_todos_posts": {
+      "descripcion": "Obtener todos los posts con imágenes, tags y usuario",
+      "metodo": "GET",
+      "url": "http://localhost:5000/post",
+      "respuesta_exitosa": [
+        {
+          "id": 1,
+          "descripcion": "Este es mi primer post",
+          "userNickName": "juan123",
+          "fecha": "2026-05-31T23:45:00.000Z",
+          "PostImages": [
+            {
+              "id": 1,
+              "url": "https://placekitten.com/800/600",
+              "postId": 1
+            }
+          ],
+          "Tags": [
+            {
+              "id": 1,
+              "name": "viaje"
+            }
+          ],
+          "User": {
+            "nickName": "juan123"
+          }
+        }
+      ],
+      "codigo_http": 200
+    },
+    "actualizar_post": {
+      "descripcion": "Actualizar la descripción de un post",
+      "metodo": "PUT",
+      "url": "http://localhost:5000/post/1",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "descripcion": "Post actualizado con nueva descripción"
+      },
+      "respuesta_exitosa": {
+        "id": 1,
+        "descripcion": "Post actualizado con nueva descripción",
+        "userNickName": "juan123",
+        "fecha": "2026-05-31T23:45:00.000Z"
+      },
+      "codigo_http": 200
+    },
+    "eliminar_post": {
+      "descripcion": "Eliminar un post",
+      "metodo": "DELETE",
+      "url": "http://localhost:5000/post/1",
+      "respuesta_exitosa": {
+        "message": "Post eliminado"
+      },
+      "codigo_http": 200
+    },
+    "agregar_imagen_a_post": {
+      "descripcion": "Agregar imágenes a un post existente",
+      "metodo": "POST",
+      "url": "http://localhost:5000/post/1/addImage",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "imagenesUrls": ["https://via.placeholder.com/800x600"]
+      },
+      "respuesta_exitosa": [
+        {
+          "id": 2,
+          "url": "https://via.placeholder.com/800x600",
+          "postId": 1
+        }
+      ],
+      "codigo_http": 201
+    }
+  }
+}

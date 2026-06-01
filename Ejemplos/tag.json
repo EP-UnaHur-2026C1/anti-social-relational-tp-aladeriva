@@ -1,0 +1,83 @@
+{
+  "tags": {
+    "crear_tag": {
+      "descripcion": "Crear una nueva etiqueta",
+      "metodo": "POST",
+      "url": "http://localhost:5000/tag",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "name": "viaje"
+      },
+      "respuesta_exitosa": {
+        "id": 1,
+        "name": "viaje"
+      },
+      "codigo_http": 201
+    },
+    "obtener_todos_tags": {
+      "descripcion": "Obtener todas las etiquetas",
+      "metodo": "GET",
+      "url": "http://localhost:5000/tag",
+      "respuesta_exitosa": [
+        {
+          "id": 1,
+          "name": "viaje"
+        },
+        {
+          "id": 2,
+          "name": "foto"
+        }
+      ],
+      "codigo_http": 200
+    },
+    "obtener_tag_por_id": {
+      "descripcion": "Obtener una etiqueta por su id",
+      "metodo": "GET",
+      "url": "http://localhost:5000/tag/1",
+      "respuesta_exitosa": {
+        "id": 1,
+        "name": "viaje"
+      },
+      "codigo_http": 200
+    },
+    "actualizar_tag": {
+      "descripcion": "Actualizar el nombre de una etiqueta",
+      "metodo": "PUT",
+      "url": "http://localhost:5000/tag/1",
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "body": {
+        "name": "aventura"
+      },
+      "respuesta_exitosa": {
+        "id": 1,
+        "name": "aventura"
+      },
+      "codigo_http": 200
+    },
+    "eliminar_tag": {
+      "descripcion": "Eliminar una etiqueta",
+      "metodo": "DELETE",
+      "url": "http://localhost:5000/tag/1",
+      "respuesta_exitosa": null,
+      "codigo_http": 204
+    },
+    "obtener_posts_por_tag": {
+      "descripcion": "Obtener posts asociados a una etiqueta",
+      "metodo": "GET",
+      "url": "http://localhost:5000/tag/1/posts",
+      "respuesta_exitosa": [
+        {
+          "id": 1,
+          "descripcion": "Este es mi primer post",
+          "userNickName": "juan123",
+          "fecha": "2026-05-31T23:45:00.000Z"
+        }
+      ],
+      "codigo_http": 200
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "comments": {
+    "crear_comentario": {
+      "descripcion": "Crear un nuevo comentario en un post",
+      "metodo": "POST",
+      "url": "http://localhost:5000/comment",
+      "body": {
+        "texto": "Muy buen contenido, me encantó este post.",
+        "userNickName": "maria456",
+        "postId": 1
+      },
+      "respuesta_exitosa": {
+        "id": 1,
+        "texto": "Muy buen contenido, me encantó este post.",
+        "userNickName": "maria456",
+        "postId": 1,
+        "fecha": "2026-05-31T23:50:00.000Z",
+        "visible": true
+      },
+      "codigo_http": 201
+    },
+    "obtener_comentarios_por_post": {
+      "descripcion": "Obtener comentarios visibles de un post",
+      "metodo": "GET",
+      "url": "http://localhost:5000/comment/post/1",
+      "respuesta_exitosa": [
+        {
+          "id": 1,
+          "texto": "Muy buen contenido, me encantó este post.",
+          "userNickName": "maria456",
+          "postId": 1,
+          "fecha": "2026-05-31T23:50:00.000Z",
+          "visible": true,
+          "User": {
+            "nickName": "maria456"
+          }
+        }
+      ],
+      "codigo_http": 200
+    },
+    "actualizar_comentario": {
+      "descripcion": "Actualizar el texto de un comentario",
+      "metodo": "PUT",
+      "url": "http://localhost:5000/comment/1",
+      "body": {
+        "texto": "Muy buen contenido, me encantó este post. Gracias por compartir."
+      },
+      "respuesta_exitosa": {
+        "id": 1,
+        "texto": "Muy buen contenido, me encantó este post. Gracias por compartir.",
+        "userNickName": "maria456",
+        "postId": 1,
+        "fecha": "2026-05-31T23:50:00.000Z",
+        "visible": true
+      },
+      "codigo_http": 200
+    },
+    "eliminar_comentario": {
+      "descripcion": "Eliminar un comentario",
+      "metodo": "DELETE",
+      "url": "http://localhost:5000/comment/1",
+      "respuesta_exitosa": {
+        "message": "Comentario eliminado"
+      },
+      "codigo_http": 200
+    }
+  }
+}

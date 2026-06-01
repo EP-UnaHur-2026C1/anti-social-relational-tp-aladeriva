@@ -1,0 +1,44 @@
+{
+  "follow": {
+    "seguir_usuario": {
+      "descripcion": "Un usuario comienza a seguir a otro usuario",
+      "metodo": "POST",
+      "url": "http://localhost:5000/user/follow",
+      "body": {
+        "followerNickName": "juan123",
+        "followedNickName": "maria456"
+      },
+      "respuesta_exitosa": {
+        "message": "juan123 ahora sigue a maria456"
+      },
+      "codigo_http": 201
+    },
+    "dejar_de_seguir": {
+      "descripcion": "Un usuario deja de seguir a otro usuario",
+      "metodo": "POST",
+      "url": "http://localhost:5000/user/unfollow",
+      "body": {
+        "followerNickName": "juan123",
+        "followedNickName": "maria456"
+      },
+      "respuesta_exitosa": {
+        "message": "juan123 dejó de seguir a maria456"
+      },
+      "codigo_http": 200
+    },
+    "obtener_followers": {
+      "descripcion": "Obtener los seguidores de un usuario",
+      "metodo": "GET",
+      "url": "http://localhost:5000/user/followers/maria456",
+      "respuesta_exitosa": {
+        "count": 1,
+        "followers": [
+          {
+            "nickName": "juan123"
+          }
+        ]
+      },
+      "codigo_http": 200
+    }
+  }
+}
