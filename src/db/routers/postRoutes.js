@@ -1,10 +1,11 @@
-const { uploadImageToPost, uploadMiddleware } = require("../controllers/postController.js") ;
+const { uploadImageToPost, uploadMiddleware } = require("../controllers/postController.js");
 
 const express = require("express");
 const { Post, Postimage } = require("../models");
 const {
   createPost,
   getPosts,
+  getPostById,
   updatePost,
   deletePost,
   addImageToPost,
@@ -18,46 +19,47 @@ const postImageSchema = require("../schema/postImageSchema.js");
 
 const router = express.Router();
 
-
-// ✔ CREAR POST 
+// ✔ CREAR POST
 router.post(
   "/",
   schemaValidator(postSchema),
   createPost
 );
 
-// Ruta para subir imagen
+// ✔ SUBIR IMAGEN
 router.post(
-  '/:postId/images/upload', 
-  uploadMiddleware, uploadImageToPost
+  "/:postId/images/upload",
+  uploadMiddleware,
+  uploadImageToPost
 );
 
-router.put(
-  '/:id',
-  middleware.validaPathParameterMiddleware,
-  middleware.validaExisteMiddleware(Post),
-  schemaValidator(postSchema),
-  updatePost
-);
-
-router.delete(
+// ✔ OBTENER UN POST
+router.get(
   "/:id",
   middleware.validaPathParameterMiddleware,
   middleware.validaExisteMiddleware(Post),
-  deletePost
-)
+  getPostById
+);
+
 // ✔ OBTENER POSTS
 router.get("/", getPosts);
-
 
 // ✔ EDITAR POST
 router.put(
   "/:id",
   middleware.validaPathParameterMiddleware,
   middleware.validaExisteMiddleware(Post),
+  schemaValidator(postSchema),
   updatePost
 );
 
+// ✔ ELIMINAR POST
+router.delete(
+  "/:id",
+  middleware.validaPathParameterMiddleware,
+  middleware.validaExisteMiddleware(Post),
+  deletePost
+);
 
 // ✔ AGREGAR IMAGEN A POST
 router.put(
@@ -68,7 +70,6 @@ router.put(
   addImageToPost
 );
 
-
 // ✔ ELIMINAR IMAGEN
 router.delete(
   "/:id/images/:imageId",
@@ -76,6 +77,5 @@ router.delete(
   middleware.validaExisteMiddleware(Postimage),
   removeImage
 );
-
 
 module.exports = router;

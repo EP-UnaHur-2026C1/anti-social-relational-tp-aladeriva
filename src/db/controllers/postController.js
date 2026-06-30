@@ -51,6 +51,23 @@ const uploadMiddleware = upload.single('image');
   res.json(posts);
 };
 
+  const getPostById = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const post = await Post.findByPk(id, {
+      include: [PostImage, Tag, User]
+    });
+
+    if (!post) {
+      return res.status(404).json({ error: "Post no encontrado" });
+    }
+
+    res.json(post);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+};
 
   const updatePost = async (req, res) => {
   try {
@@ -169,6 +186,7 @@ const uploadMiddleware = upload.single('image');
 module.exports = {
   createPost,
   getPosts,
+  getPostById,
   updatePost,
   deletePost,
   addImageToPost,
