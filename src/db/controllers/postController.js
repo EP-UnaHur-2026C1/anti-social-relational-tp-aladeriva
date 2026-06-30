@@ -2,20 +2,6 @@ const upload = require("../middlewares/upload.middleware.js");
 const { Post, PostImage, Tag, User,Comment} = require("../models/index.js");
 const uploadMiddleware = upload.single('image');
 
-  const uploadImageToPost = async (req, res) => {
-  const { postId } = req.params;
-  if (!req.file) {
-    return res.status(400).json({ error: 'No se recibió ninguna imagen' });
-  }
-  try {
-    const imageUrl = `/uploads/${req.file.filename}`; 
-    const newImage = await PostImage.create({ url: imageUrl, postId });
-    res.status(201).json(newImage);
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
-  }
-};
-
   const createPost = async (req, res) => {
     try {
       
@@ -191,7 +177,6 @@ module.exports = {
   deletePost,
   addImageToPost,
   removeImage,
-  uploadImageToPost,
   uploadMiddleware
 };
 
