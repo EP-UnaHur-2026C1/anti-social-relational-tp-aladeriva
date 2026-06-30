@@ -1,5 +1,6 @@
-require('dotenv').config();
+require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const db = require("./db/models");
 const path = require("path");
@@ -10,12 +11,18 @@ const relationRouter = require("./db/routers/relationRoutes");
 const tagRouter = require("./db/routers/tagRoutes");
 const userRouter = require("./db/routers/userRoutes");
 
-const swaggerUi = require('swagger-ui-express');
-const YAML = require('yamljs');
+const swaggerUi = require("swagger-ui-express");
+const YAML = require("yamljs");
 
 const PORT = 5000;
 
 app.use(express.json());
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 
 app.use("/comment", commentRouter);
 app.use("/post", postRouter);
@@ -23,9 +30,15 @@ app.use("/relation", relationRouter);
 app.use("/tag", tagRouter);
 app.use("/user", userRouter);
 
-const swaggerDocument = YAML.load(path.join(process.cwd(), 'swagger.yaml'));
+const swaggerDocument = YAML.load(
+  path.join(process.cwd(), "swagger.yaml")
+);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument)
+);
 
 async function startServer() {
   try {
@@ -33,10 +46,12 @@ async function startServer() {
     await db.sequelize.sync();
 
     app.listen(PORT, () => {
-      console.log(`✅ App iniciada y corriendo en el puerto ${PORT}`);
+      console.log(
+        `App iniciada y corriendo en el puerto ${PORT}`
+      );
     });
   } catch (error) {
-    console.error('❌ Error:', error);
+    console.error("Error:", error);
   }
 }
 
