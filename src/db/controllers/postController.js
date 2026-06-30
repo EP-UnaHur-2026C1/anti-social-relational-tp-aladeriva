@@ -1,5 +1,5 @@
 const upload = require("../middlewares/upload.middleware.js");
-const { Post, PostImage, Tag, User } = require("../models/index.js");
+const { Post, PostImage, Tag, User,Comment} = require("../models/index.js");
 const uploadMiddleware = upload.single('image');
 
   const uploadImageToPost = async (req, res) => {
@@ -47,7 +47,7 @@ const uploadMiddleware = upload.single('image');
 };
 
   const getPosts = async (req, res) => {
-  const posts = await Post.findAll({ include: [PostImage, Tag, User] });
+  const posts = await Post.findAll({ include: [PostImage, Tag, User,Comment] });
   res.json(posts);
 };
 
@@ -56,7 +56,7 @@ const uploadMiddleware = upload.single('image');
     const { id } = req.params;
 
     const post = await Post.findByPk(id, {
-      include: [PostImage, Tag, User]
+      include: [PostImage, Tag, User,Comment]
     });
 
     if (!post) {

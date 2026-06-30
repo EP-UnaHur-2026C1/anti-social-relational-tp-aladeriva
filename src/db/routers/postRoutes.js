@@ -26,13 +26,6 @@ router.post(
   createPost
 );
 
-// ✔ SUBIR IMAGEN
-router.post(
-  "/:postId/images/upload",
-  uploadMiddleware,
-  uploadImageToPost
-);
-
 // ✔ OBTENER UN POST
 router.get(
   "/:id",
